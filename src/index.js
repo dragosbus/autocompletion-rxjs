@@ -25,7 +25,12 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 		return from(getMovies(key.target.value || "s")).pipe(
 			map(results => results.results),
 			concatAll(),
-			filter(movie => movie.vote_average > 7)
+			filter(movie => movie.vote_average > 7),
+			map(({ original_title, poster_path, overview }) => ({
+				original_title,
+				poster_path,
+				overview
+			}))
 		);
 	}),
 	concatAll()
@@ -36,7 +41,7 @@ getData$.subscribe(
 		console.log(data);
 		sugestion.innerHTML = "";
 		setTimeout(() => {
-			sugestion.innerHTML += addSugestion(data.title);
+			sugestion.innerHTML += addSugestion(data.original_title);
 		}, 100);
 	},
 	err => console.log(err),
