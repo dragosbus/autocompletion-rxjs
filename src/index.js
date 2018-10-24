@@ -1,6 +1,16 @@
 import config from './config';
-import { from, fromEvent } from "rxjs";
-import { map, concatAll, filter, throttleTime, take } from "rxjs/operators";
+import {
+	from,
+	fromEvent
+} from "rxjs";
+import {
+	map,
+	concatAll,
+	filter,
+	throttleTime,
+	take,
+	takeUntil
+} from "rxjs/operators";
 
 const API_KEY = config.API_KEY;
 
@@ -19,6 +29,8 @@ const addSugestion = data => `<li>
   <p class='title'>${data.original_title}</p>
 </li>`;
 
+const hide$ = fromEvent(sugestion, 'click');
+
 const getData$ = fromEvent(searchInput, "input").pipe(
 	throttleTime(1000),
 	map(key => {
@@ -26,7 +38,12 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 			map(results => results.results),
 			concatAll(),
 			filter(movie => movie.vote_average > 7),
-			map(({ id, original_title, poster_path, overview }) => ({
+			map(({
+				id,
+				original_title,
+				poster_path,
+				overview
+			}) => ({
 				id,
 				original_title,
 				poster_path,
@@ -40,10 +57,19 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 
 getData$.subscribe(
 	data => {
-		console.log(data);
 		sugestion.innerHTML = "";
+
+		hide$.subscribe(event => {
+			const targetTag = event.target.tagName;
+			if (targetTag === 'LI' || targetTag === 'P' || targetTag==='IMG') {
+				searchInput.value = data.original_title;
+				sugestion.style.display = 'none';
+			}
+		});
+
 		setTimeout(() => {
 			sugestion.innerHTML += addSugestion(data);
+			sugestion.style.display = 'block';
 		}, 100);
 	},
 	err => console.log(err),

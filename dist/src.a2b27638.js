@@ -15065,6 +15065,7 @@ var addSugestion = function addSugestion(data) {
   return "<li>\n  <img class='poster-title' src='https://image.tmdb.org/t/p/w600_and_h900_bestv2".concat(data.poster_path, "' alt=\"poster\">\n  <p class='title'>").concat(data.original_title, "</p>\n</li>");
 };
 
+var hide$ = (0, _rxjs.fromEvent)(sugestion, 'click');
 var getData$ = (0, _rxjs.fromEvent)(searchInput, "input").pipe((0, _operators.throttleTime)(1000), (0, _operators.map)(function (key) {
   return (0, _rxjs.from)(getMovies(key.target.value || "s")).pipe((0, _operators.map)(function (results) {
     return results.results;
@@ -15084,10 +15085,18 @@ var getData$ = (0, _rxjs.fromEvent)(searchInput, "input").pipe((0, _operators.th
   }), (0, _operators.take)(4));
 }), (0, _operators.concatAll)());
 getData$.subscribe(function (data) {
-  console.log(data);
   sugestion.innerHTML = "";
+  hide$.subscribe(function (event) {
+    var targetTag = event.target.tagName;
+
+    if (targetTag === 'LI' || targetTag === 'P' || targetTag === 'IMG') {
+      searchInput.value = data.original_title;
+      sugestion.style.display = 'none';
+    }
+  });
   setTimeout(function () {
     sugestion.innerHTML += addSugestion(data);
+    sugestion.style.display = 'block';
   }, 100);
 }, function (err) {
   return console.log(err);
