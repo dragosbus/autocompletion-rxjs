@@ -1,0 +1,32 @@
+#search {
+	display: block;
+	border: 1px solid rgba(2, 2, 2, 0.2);
+	outline: none;
+	width: 200px;
+	margin: 0 auto;
+}
+
+.sugestions {
+	width: 150px;
+	border: 1px solid rgba(2, 2, 2, 0.2);
+	border-top: none;
+	list-style: none;
+	position: absolute;
+	top: 26px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+
+.sugestions li {
+	animation: fade-in 0.25s ease-in;
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
