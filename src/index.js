@@ -1,12 +1,5 @@
 import { from, fromEvent } from "rxjs";
-import {
-	map,
-	concatAll,
-	filter,
-	throttleTime,
-	skipUntil,
-	takeUntil
-} from "rxjs/operators";
+import { map, concatAll, filter, throttleTime } from "rxjs/operators";
 
 const API_KEY = "cd8616dd1859d5e422a87d51ad82a0b9";
 
@@ -26,6 +19,7 @@ const addSugestion = data => `<li>
 </li>`;
 
 const getData$ = fromEvent(searchInput, "input").pipe(
+	throttleTime(1000),
 	map(key => {
 		return from(getMovies(key.target.value || "s")).pipe(
 			map(results => results.results),
