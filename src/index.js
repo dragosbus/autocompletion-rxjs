@@ -8,30 +8,24 @@ import {
 	takeUntil
 } from "rxjs/operators";
 
-const movies = [
-	{ title: "Superman" },
-	{ title: "Batman vs Superman" },
-	{ title: "Spiderman 1" },
-	{ title: "Spiderman 2" },
-	{ title: "Spiderman 3" },
-	{ title: "GodFather 1" },
-	{ title: "GodFather 3" },
-	{ title: "Wolf" }
-];
+const API_KEY = "cd8616dd1859d5e422a87d51ad82a0b9";
+
+const getMovies = query => {
+	return fetch(
+		`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&query=${query}&page=1&include_adult=false`
+	).then(res => res.json());
+};
 
 const sugestion = document.querySelector(".sugestions");
 const searchInput = document.getElementById("search");
 const addSugestion = data => `<li>${data}</li>`;
 
-sugestion.innerHTML = "";
-
 const getData$ = fromEvent(searchInput, "input").pipe(
-	throttleTime(250),
 	map(key => {
-		return from(movies).pipe(
-			filter(movie => {
-				return movie.title.toLowerCase().startsWith(key.target.value);
-			})
+		return from(getMovies(key.target.value || "s")).pipe(
+			map(results => results.results),
+			concatAll(),
+			filter(movie => movie.vote_average > 7)
 		);
 	}),
 	concatAll()
