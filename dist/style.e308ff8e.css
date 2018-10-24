@@ -1,0 +1,56 @@
+#search {
+	box-sizing: border-box;
+	display: block;
+	outline: none;
+	width: 100%;
+	height: 3rem;
+	margin: 0 auto;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	border: none;
+	border-bottom: 1px solid rgba(2, 2, 2, 0.2);
+	padding: 1rem 2rem;
+	z-index: 1;
+}
+
+.sugestions {
+	width: 100%;
+	box-sizing: border-box;
+	border-top: none;
+	list-style: none;
+	position: absolute;
+	top: 3rem;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	z-index: 0;
+}
+
+.sugestions li {
+	animation: fade-in 0.25s ease-in;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.poster-title {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 100%;
+}
+
+.title {
+	font-size: 1.2rem;
+	margin-left: 3rem;
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

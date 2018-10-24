@@ -1,7 +1,8 @@
+import config from './config';
 import { from, fromEvent } from "rxjs";
-import { map, concatAll, filter, throttleTime } from "rxjs/operators";
+import { map, concatAll, filter, throttleTime, take } from "rxjs/operators";
 
-const API_KEY = "cd8616dd1859d5e422a87d51ad82a0b9";
+const API_KEY = config.API_KEY;
 
 const getMovies = query => {
 	return fetch(
@@ -30,7 +31,8 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 				original_title,
 				poster_path,
 				overview
-			}))
+			})),
+			take(4),
 		);
 	}),
 	concatAll()
