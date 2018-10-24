@@ -18,7 +18,12 @@ const getMovies = query => {
 
 const sugestion = document.querySelector(".sugestions");
 const searchInput = document.getElementById("search");
-const addSugestion = data => `<li>${data}</li>`;
+const addSugestion = data => `<li>
+  <img class='poster-title' src='https://image.tmdb.org/t/p/w600_and_h900_bestv2${
+		data.poster_path
+	}' alt="poster">
+  <p class='title'>${data.original_title}</p>
+</li>`;
 
 const getData$ = fromEvent(searchInput, "input").pipe(
 	map(key => {
@@ -26,7 +31,8 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 			map(results => results.results),
 			concatAll(),
 			filter(movie => movie.vote_average > 7),
-			map(({ original_title, poster_path, overview }) => ({
+			map(({ id, original_title, poster_path, overview }) => ({
+				id,
 				original_title,
 				poster_path,
 				overview
@@ -41,7 +47,7 @@ getData$.subscribe(
 		console.log(data);
 		sugestion.innerHTML = "";
 		setTimeout(() => {
-			sugestion.innerHTML += addSugestion(data.original_title);
+			sugestion.innerHTML += addSugestion(data);
 		}, 100);
 	},
 	err => console.log(err),
