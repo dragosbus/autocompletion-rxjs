@@ -9,7 +9,7 @@ import {
 	filter,
 	throttleTime,
 	take,
-	takeUntil
+	switchAll
 } from "rxjs/operators";
 
 const API_KEY = config.API_KEY;
@@ -34,7 +34,8 @@ const hide$ = fromEvent(sugestion, 'click');
 const getData$ = fromEvent(searchInput, "input").pipe(
 	throttleTime(1000),
 	map(key => {
-		return from(getMovies(key.target.value || "s")).pipe(
+		return from(getMovies(key.target.value)).pipe(
+			filter(res=>res),
 			map(results => results.results),
 			concatAll(),
 			filter(movie => movie.vote_average > 7),
@@ -52,7 +53,7 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 			take(4),
 		);
 	}),
-	concatAll()
+	switchAll()
 );
 
 getData$.subscribe(
@@ -61,7 +62,7 @@ getData$.subscribe(
 
 		hide$.subscribe(event => {
 			const targetTag = event.target.tagName;
-			if (targetTag === 'LI' || targetTag === 'P' || targetTag==='IMG') {
+			if (targetTag === 'LI' || targetTag === 'P' || targetTag === 'IMG') {
 				searchInput.value = data.original_title;
 				sugestion.style.display = 'none';
 			}
