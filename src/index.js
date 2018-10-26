@@ -33,9 +33,9 @@ const hide$ = fromEvent(sugestion, 'click');
 
 const getData$ = fromEvent(searchInput, "input").pipe(
 	throttleTime(1000),
+	filter(key=>key.target.value),
 	map(key => {
 		return from(getMovies(key.target.value)).pipe(
-			filter(res=>res),
 			map(results => results.results),
 			concatAll(),
 			filter(movie => movie.vote_average > 7),
