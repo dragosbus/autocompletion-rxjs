@@ -15068,7 +15068,7 @@ var addSugestion = function addSugestion(data) {
 var hide$ = (0, _rxjs.fromEvent)(sugestion, 'click');
 var getData$ = (0, _rxjs.fromEvent)(searchInput, "input").pipe((0, _operators.throttleTime)(1000), (0, _operators.filter)(function (key) {
   return key.target.value;
-}), (0, _operators.map)(function (key) {
+}), (0, _operators.switchMap)(function (key) {
   return (0, _rxjs.from)(getMovies(key.target.value)).pipe((0, _operators.map)(function (results) {
     return results.results;
   }), (0, _operators.concatAll)(), (0, _operators.filter)(function (movie) {
@@ -15085,7 +15085,7 @@ var getData$ = (0, _rxjs.fromEvent)(searchInput, "input").pipe((0, _operators.th
       overview: overview
     };
   }), (0, _operators.take)(4));
-}), (0, _operators.switchAll)());
+}));
 getData$.subscribe(function (data) {
   sugestion.innerHTML = "";
   hide$.subscribe(function (event) {
@@ -15132,7 +15132,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46103" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40359" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

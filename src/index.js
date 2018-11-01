@@ -9,7 +9,7 @@ import {
 	filter,
 	throttleTime,
 	take,
-	switchAll
+	switchMap,
 } from "rxjs/operators";
 
 const API_KEY = config.API_KEY;
@@ -34,7 +34,7 @@ const hide$ = fromEvent(sugestion, 'click');
 const getData$ = fromEvent(searchInput, "input").pipe(
 	throttleTime(1000),
 	filter(key=>key.target.value),
-	map(key => {
+	switchMap(key => {
 		return from(getMovies(key.target.value)).pipe(
 			map(results => results.results),
 			concatAll(),
@@ -52,8 +52,7 @@ const getData$ = fromEvent(searchInput, "input").pipe(
 			})),
 			take(4),
 		);
-	}),
-	switchAll()
+	})
 );
 
 getData$.subscribe(
